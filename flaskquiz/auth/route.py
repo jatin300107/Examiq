@@ -1,12 +1,33 @@
-from flaskquiz import bcrypt
+ 
 from flaskquiz.model import User , Role
-from flaskquiz import db
+
 from flask import  render_template , flash , url_for, Blueprint, redirect
 from flask_login import current_user, logout_user, login_user
 from flaskquiz.forms import Register, Login
-from flaskquiz import login_manager
+from flaskquiz.extensions import login_manager, bcrypt , db
 from flask_login import login_required
-auth = Blueprint('auth',__name__)
+from . import auth
+@auth.route('/login', methods = ['GET','POST'])
+def login():
+    form = Login()
+    if current_user.is_authenticated:
+        return redirect(url_for('main.account'))
+    if form.validate_on_submit():
+        user = User.query.filter_by(email = form.email.data).first()
+        if user and bcrypt.check_password_hash(user.password,form.password.data):
+            if user.role.name == 'Instructor':
+                login_user(user,remember=True)
+                flash("Login successful")
+                return redirect(url_for('main.instructoraccount'))
+            elif user.role.name == 'Learner':
+                login_user(user,remember=True)
+                flash("Login successful")
+                return redirect(url_for('main.learneraccount'))
+        else:
+            flash('Login unsuccessful')
+
+    return render_template('login.html', form = form)
+
 @auth.route('/register', methods = ['GET','POST'])
 def register():
     form = Register()
@@ -29,27 +50,6 @@ def register():
             flash('Registration Sucesfull')
             return redirect(url_for('auth.login'))
     return render_template('register.html',form = form)
-
-@auth.login('/login', methods = ['GET','POST'])
-def login():
-    form = Login()
-    if current_user.is_authenticated:
-        return redirect(url_for('main.account'))
-    if form.validate_on_submit():
-        user = User.query.filter_by(email = form.email.data).first()
-        if user and bcrypt.check_password_hash(user.password,form.password.data):
-            if user.role.name == 'Instructor':
-                login_user(user,remember=True)
-                flash("Login successful")
-                return redirect(url_for('main.instructoraccount'))
-            elif user.role.name == 'Learner':
-                login_user(user,remember=True)
-                flash("Login successful")
-                return redirect(url_for('main.learneraccount'))
-        else:
-            flash('Login unsuccessful')
-
-    return render_template('login.html', form = form)
 
 @auth.route('/logout')
 @login_required
