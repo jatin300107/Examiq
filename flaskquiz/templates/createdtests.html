@@ -1,0 +1,61 @@
+{% extends "base.html" %}
+{% block title %}My Tests — FlaskQuiz{% endblock %}
+{% block content %}
+<div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 2rem;">
+    <h1 style="margin-bottom: 0;">My Tests</h1>
+    <a href="{{ url_for('main.createtest') }}" class="btn btn-primary">+ New Test</a>
+</div>
+
+{% if created_test.items %}
+    <div style="display: flex; flex-direction: column; gap: 0.75rem;">
+        {% for test in created_test.items %}
+        <div class="card" style="display: flex; justify-content: space-between; align-items: center;">
+            <div>
+                <div style="display: flex; align-items: center; gap: 0.75rem; margin-bottom: 0.3rem;">
+                    <h2 style="font-size: 1rem; margin-bottom: 0;">{{ test.title }}</h2>
+                    {% if test.difficulty == 'easy' %}
+                        <span class="badge badge-teal">Easy</span>
+                    {% elif test.difficulty == 'medium' %}
+                        <span class="badge badge-peacock">Medium</span>
+                    {% else %}
+                        <span class="badge badge-pink">Hard</span>
+                    {% endif %}
+                </div>
+                <p class="text-muted" style="font-size: 0.85rem;">
+                    {{ test.topic }} · {{ test.questions|length }} question{{ 's' if test.questions|length != 1 }}
+                </p>
+            </div>
+            <a href="{{ url_for('main.createquestion') }}" class="btn btn-outline" style="font-size: 0.8rem; padding: 0.4rem 0.9rem; margin-left: 1rem;">
+                + Question
+            </a>
+        </div>
+        {% endfor %}
+    </div>
+
+    <div class="pagination">
+        {% if created_test.has_prev %}
+            <a href="{{ url_for('main.mycreatedtests', page=created_test.prev_num) }}">← Prev</a>
+        {% endif %}
+        {% for page_num in created_test.iter_pages(left_edge=1, right_edge=1, left_current=2, right_current=2) %}
+            {% if page_num %}
+                {% if page_num == created_test.page %}
+                    <span class="current">{{ page_num }}</span>
+                {% else %}
+                    <a href="{{ url_for('main.mycreatedtests', page=page_num) }}">{{ page_num }}</a>
+                {% endif %}
+            {% else %}
+                <span>…</span>
+            {% endif %}
+        {% endfor %}
+        {% if created_test.has_next %}
+            <a href="{{ url_for('main.mycreatedtests', page=created_test.next_num) }}">Next →</a>
+        {% endif %}
+    </div>
+{% else %}
+    <div class="empty-state card">
+        <div class="icon">🗂️</div>
+        <p style="margin-bottom: 1rem;">No tests created yet.</p>
+        <a href="{{ url_for('main.createtest') }}" class="btn btn-primary">Create Your First Test</a>
+    </div>
+{% endif %}
+{% endblock %}

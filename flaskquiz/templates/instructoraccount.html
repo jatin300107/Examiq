@@ -1,0 +1,37 @@
+{% extends "base.html" %}
+{% block title %}Instructor Dashboard — FlaskQuiz{% endblock %}
+{% block content %}
+<div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 2rem;">
+    <div>
+        <h1 style="margin-bottom: 0.2rem;">Hey, {{ current_user.username }} 👋</h1>
+        <p class="text-muted">Instructor Dashboard</p>
+    </div>
+    <a href="{{ url_for('main.createtest') }}" class="btn btn-primary">+ New Test</a>
+</div>
+
+<div class="grid-2" style="margin-bottom: 1.5rem;">
+    <div class="card" style="text-align: center;">
+        <p class="text-muted" style="font-size: 0.78rem; text-transform: uppercase; letter-spacing: 0.6px; margin-bottom: 0.5rem;">Tests Created</p>
+        <p style="font-family: 'Syne', sans-serif; font-size: 2.8rem; font-weight: 800; background: var(--gradient); -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text;">
+            {{ current_user.tests|length if current_user.tests else 0 }}
+        </p>
+    </div>
+    <div class="card" style="text-align: center;">
+        <p class="text-muted" style="font-size: 0.78rem; text-transform: uppercase; letter-spacing: 0.6px; margin-bottom: 0.75rem;">Quick Actions</p>
+        <div style="display: flex; flex-direction: column; gap: 0.5rem;">
+            <a href="{{ url_for('main.createtest') }}" class="btn btn-outline" style="justify-content: center; font-size: 0.85rem;">Create Test</a>
+            <a href="{{ url_for('main.createquestion') }}" class="btn btn-outline" style="justify-content: center; font-size: 0.85rem;">Add Question</a>
+        </div>
+    </div>
+</div>
+
+<div class="card">
+    <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 1rem;">
+        <h2 style="margin-bottom: 0;">My Tests</h2>
+        <a href="{{ url_for('main.mycreatedtests') }}" class="text-muted" style="font-size: 0.85rem; text-decoration: none;">View all →</a>
+    </div>
+    <p class="text-muted" style="font-size: 0.875rem;">
+        Manage all your created tests from <a href="{{ url_for('main.mycreatedtests') }}" class="text-peacock">My Tests</a>.
+    </p>
+</div>
+{% endblock %}

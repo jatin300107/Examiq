@@ -1,0 +1,102 @@
+{% extends "base.html" %}
+{% block title %}Add Question — FlaskQuiz{% endblock %}
+{% block extra_styles %}
+<style>
+.radio-group { display: flex; flex-direction: column; gap: 0.5rem; margin-top: 0.4rem; }
+.radio-option {
+    display: flex; align-items: center; gap: 0.75rem;
+    padding: 0.7rem 1rem; border: 1px solid var(--border); border-radius: 10px;
+    cursor: pointer; transition: all 0.2s;
+}
+.radio-option:hover { border-color: var(--pink); background: #d63af908; }
+.radio-option input[type="radio"] { accent-color: var(--pink); width: 16px; height: 16px; }
+</style>
+{% endblock %}
+{% block content %}
+<div style="max-width: 600px; margin: 0 auto;">
+    <h1>Add a Question</h1>
+    <div class="card">
+        <form method="POST" action="{{ url_for('main.createquestion') }}">
+            {{ form.hidden_tag() }}
+
+            <div class="form-group">
+                {{ form.questiontext.label }}
+                {{ form.questiontext(placeholder="Type your question here...") }}
+                {% for error in form.questiontext.errors %}
+                    <p class="error-msg">{{ error }}</p>
+                {% endfor %}
+            </div>
+
+            <div class="grid-2">
+                <div class="form-group">
+                    {{ form.topic.label }}
+                    {{ form.topic(placeholder="Topic") }}
+                    {% for error in form.topic.errors %}
+                        <p class="error-msg">{{ error }}</p>
+                    {% endfor %}
+                </div>
+                <div class="form-group">
+                    {{ form.difficulty.label }}
+                    {{ form.difficulty(placeholder="easy / medium / hard") }}
+                    {% for error in form.difficulty.errors %}
+                        <p class="error-msg">{{ error }}</p>
+                    {% endfor %}
+                </div>
+            </div>
+
+            <hr class="divider">
+            <p style="font-size: 0.78rem; color: var(--muted); margin-bottom: 1rem; text-transform: uppercase; letter-spacing: 0.6px;">Answer Options</p>
+
+            <div class="form-group">
+                {{ form.option1.label }}
+                {{ form.option1(placeholder="Option 1") }}
+                {% for error in form.option1.errors %}
+                    <p class="error-msg">{{ error }}</p>
+                {% endfor %}
+            </div>
+            <div class="form-group">
+                {{ form.option2.label }}
+                {{ form.option2(placeholder="Option 2") }}
+                {% for error in form.option2.errors %}
+                    <p class="error-msg">{{ error }}</p>
+                {% endfor %}
+            </div>
+            <div class="form-group">
+                {{ form.option3.label }}
+                {{ form.option3(placeholder="Option 3") }}
+                {% for error in form.option3.errors %}
+                    <p class="error-msg">{{ error }}</p>
+                {% endfor %}
+            </div>
+            <div class="form-group">
+                {{ form.option4.label }}
+                {{ form.option4(placeholder="Option 4") }}
+                {% for error in form.option4.errors %}
+                    <p class="error-msg">{{ error }}</p>
+                {% endfor %}
+            </div>
+
+            <hr class="divider">
+            <div class="form-group">
+                <label>Correct Option</label>
+                <div class="radio-group">
+                    {% for subfield in form.correct_option %}
+                    <label class="radio-option">
+                        {{ subfield }}
+                        <span>{{ subfield.label.text }}</span>
+                    </label>
+                    {% endfor %}
+                </div>
+                {% for error in form.correct_option.errors %}
+                    <p class="error-msg">{{ error }}</p>
+                {% endfor %}
+            </div>
+
+            <div style="display: flex; gap: 0.75rem; margin-top: 1rem;">
+                {{ form.submit(class="btn btn-pink") }}
+                <a href="{{ url_for('main.instructoraccount') }}" class="btn btn-outline">Cancel</a>
+            </div>
+        </form>
+    </div>
+</div>
+{% endblock %}

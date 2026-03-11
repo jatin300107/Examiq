@@ -1,5 +1,5 @@
 from flask_wtf import FlaskForm
-from wtforms import StringField, PasswordField, SubmitField , TextAreaField
+from wtforms import StringField, PasswordField, SubmitField , TextAreaField , RadioField , IntegerField , SelectField
 from wtforms.validators import DataRequired, EqualTo, Length,Email
 from flaskquiz.model import User
 from flask_login import current_user
@@ -47,7 +47,21 @@ class Update_user(FlaskForm):
 class Created_Test(FlaskForm):
     title = StringField('Title', validators=[DataRequired()])
     topic = StringField('Topic', validators=[DataRequired()])
-    difficulty = StringField('Difficulty',  choices = ["easy", "Easy" , "Medium", "medium" , "Hard", "hard"] , coerce = to_lower , validators=[DataRequired() , Validate_difficulty])
+    difficulty = SelectField('Difficulty',  choices = ["easy",   "medium" , "hard"] , coerce = to_lower , validators=[DataRequired() , Validate_difficulty])
     description = TextAreaField('Description')
+    no_of_question = IntegerField("no of questions")
+    submit = SubmitField('Create test')
 
-        
+class CreateQuestion(FlaskForm):
+    questiontext = TextAreaField("Question", validators=[DataRequired()])
+    topic = StringField('Topic' , validators=[DataRequired()])
+    difficulty = SelectField('Difficulty' ,  choices = ["easy",   "medium" ,  "hard"] ,
+                              coerce = to_lower , validators=[DataRequired() , Validate_difficulty])
+    option1 = StringField('option 1' , validators=[DataRequired()])
+    option2 = StringField('option 2' , validators=[DataRequired()])
+    option3 = StringField('option 3' , validators=[DataRequired()])
+    option4 = StringField('option 4' , validators=[DataRequired()])
+    correct_option = RadioField("correct option" , choices = [("option 1" , "Option 1" ),
+                                                              ("option 2", "Option 2"),("option 3" , "Option 3") , ("option 4" ,"Option 4")])
+    submit = SubmitField('Create Question')
+

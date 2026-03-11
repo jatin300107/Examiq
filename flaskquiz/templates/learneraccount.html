@@ -1,0 +1,34 @@
+{% extends "base.html" %}
+{% block title %}Learner Dashboard — FlaskQuiz{% endblock %}
+{% block content %}
+<div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 2rem;">
+    <div>
+        <h1 style="margin-bottom: 0.2rem;">Hey, {{ current_user.username }} 👋</h1>
+        <p class="text-muted">Learner Dashboard</p>
+    </div>
+    <a href="{{ url_for('main.showtest') }}" class="btn btn-primary">Browse Tests</a>
+</div>
+
+<div class="grid-2" style="margin-bottom: 1.5rem;">
+    <div class="card" style="text-align: center;">
+        <p class="text-muted" style="font-size: 0.78rem; text-transform: uppercase; letter-spacing: 0.6px; margin-bottom: 0.5rem;">Tests Attempted</p>
+        <p style="font-family: 'Syne', sans-serif; font-size: 2.8rem; font-weight: 800; background: var(--gradient); -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text;">
+            {{ current_user.attempts|length if current_user.attempts else 0 }}
+        </p>
+    </div>
+    <div class="card" style="text-align: center;">
+        <p class="text-muted" style="font-size: 0.78rem; text-transform: uppercase; letter-spacing: 0.6px; margin-bottom: 0.75rem;">Quick Actions</p>
+        <div style="display: flex; flex-direction: column; gap: 0.5rem;">
+            <a href="{{ url_for('main.showtest') }}" class="btn btn-outline" style="justify-content: center; font-size: 0.85rem;">Find a Test</a>
+            <a href="{{ url_for('main.attemtedtest') }}" class="btn btn-outline" style="justify-content: center; font-size: 0.85rem;">My History</a>
+        </div>
+    </div>
+</div>
+
+<div class="card">
+    <h2 style="margin-bottom: 0.5rem;">Keep Learning</h2>
+    <p class="text-muted" style="font-size: 0.875rem;">
+        Browse available tests and track your progress from <a href="{{ url_for('main.attemtedtest') }}" class="text-peacock">My Attempts</a>.
+    </p>
+</div>
+{% endblock %}

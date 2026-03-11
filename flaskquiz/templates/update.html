@@ -1,0 +1,35 @@
+{% extends "base.html" %}
+{% block title %}Account Settings — FlaskQuiz{% endblock %}
+{% block content %}
+<div style="max-width: 460px; margin: 2rem auto;">
+    <div class="card">
+        <h1 style="font-size: 1.5rem; margin-bottom: 0.3rem;">Account Settings</h1>
+        <p class="text-muted" style="margin-bottom: 1.8rem;">Update your profile details</p>
+
+        <form method="POST" action="{{ url_for('main.update_account') }}">
+            {{ form.hidden_tag() }}
+
+            <div class="form-group">
+                {{ form.username.label }}
+                {{ form.username(value=current_user.username) }}
+                {% for error in form.username.errors %}
+                    <p class="error-msg">{{ error }}</p>
+                {% endfor %}
+            </div>
+
+            <div class="form-group">
+                {{ form.email.label }}
+                {{ form.email(value=current_user.email) }}
+                {% for error in form.email.errors %}
+                    <p class="error-msg">{{ error }}</p>
+                {% endfor %}
+            </div>
+
+            <div style="display: flex; gap: 0.75rem; margin-top: 0.5rem;">
+                {{ form.submit(class="btn btn-primary") }}
+                <a href="{{ url_for('main.index') }}" class="btn btn-outline">Cancel</a>
+            </div>
+        </form>
+    </div>
+</div>
+{% endblock %}

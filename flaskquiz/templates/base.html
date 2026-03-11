@@ -1,0 +1,121 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{% block title %}FlaskQuiz{% endblock %}</title>
+    <link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;600;700;800&family=Outfit:wght@300;400;500;600&display=swap" rel="stylesheet">
+    <style>
+        *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+        :root {
+            --bg: #0a0a14; --surface: #10101e; --surface2: #181828; --border: #2a2a45;
+            --peacock: #00b4d8; --pink: #d63af9; --teal: #06d6a0;
+            --text: #eef0ff; --muted: #6b6d8a; --danger: #f43f5e;
+            --gradient: linear-gradient(135deg, #00b4d8, #d63af9);
+        }
+        body {
+            background: var(--bg); color: var(--text); font-family: 'Outfit', sans-serif; min-height: 100vh;
+            background-image: radial-gradient(ellipse at 15% 15%, #00b4d815 0%, transparent 50%),
+                              radial-gradient(ellipse at 85% 85%, #d63af915 0%, transparent 50%);
+        }
+        nav {
+            display: flex; align-items: center; justify-content: space-between;
+            padding: 1rem 2rem; border-bottom: 1px solid var(--border);
+            background: #0a0a14ee; backdrop-filter: blur(10px); position: sticky; top: 0; z-index: 100;
+        }
+        .nav-brand {
+            font-family: 'Syne', sans-serif; font-size: 1.2rem; font-weight: 800;
+            background: var(--gradient); -webkit-background-clip: text; -webkit-text-fill-color: transparent;
+            background-clip: text; text-decoration: none;
+        }
+        .nav-links { display: flex; gap: 0.4rem; align-items: center; flex-wrap: wrap; }
+        .nav-links a { color: var(--muted); text-decoration: none; padding: 0.4rem 0.9rem; border-radius: 20px; font-size: 0.875rem; transition: all 0.2s; }
+        .nav-links a:hover { color: var(--text); background: var(--surface2); }
+        .nav-links a.pill { background: var(--surface2); border: 1px solid var(--border); color: var(--text); }
+        .nav-links a.pill:hover { border-color: var(--peacock); color: var(--peacock); }
+        .container { max-width: 900px; margin: 0 auto; padding: 2rem 1.5rem; }
+        .card { background: var(--surface); border: 1px solid var(--border); border-radius: 16px; padding: 2rem; }
+        h1, h2, h3 { font-family: 'Syne', sans-serif; letter-spacing: -0.5px; }
+        h1 { font-size: 1.9rem; margin-bottom: 1.5rem; }
+        h2 { font-size: 1.2rem; margin-bottom: 1rem; }
+        .form-group { margin-bottom: 1.2rem; }
+        label { display: block; font-size: 0.78rem; color: var(--muted); margin-bottom: 0.4rem; text-transform: uppercase; letter-spacing: 0.6px; font-weight: 500; }
+        input, select, textarea {
+            width: 100%; background: var(--surface2); border: 1px solid var(--border); color: var(--text);
+            padding: 0.75rem 1rem; border-radius: 10px; font-family: 'Outfit', sans-serif; font-size: 0.95rem; transition: all 0.2s; outline: none;
+        }
+        input:focus, select:focus, textarea:focus { border-color: var(--peacock); box-shadow: 0 0 0 3px #00b4d815; }
+        textarea { resize: vertical; min-height: 80px; }
+        .btn {
+            display: inline-flex; align-items: center; gap: 0.4rem;
+            padding: 0.7rem 1.5rem; border-radius: 10px; font-family: 'Outfit', sans-serif;
+            font-size: 0.9rem; font-weight: 500; cursor: pointer; border: none; text-decoration: none; transition: all 0.2s;
+        }
+        .btn-primary { background: var(--gradient); color: white; box-shadow: 0 4px 20px #00b4d825; }
+        .btn-primary:hover { opacity: 0.88; transform: translateY(-1px); }
+        .btn-outline { background: transparent; border: 1px solid var(--border); color: var(--text); }
+        .btn-outline:hover { border-color: var(--peacock); color: var(--peacock); }
+        .btn-pink { background: linear-gradient(135deg, #d63af9, #9333ea); color: white; }
+        .btn-pink:hover { opacity: 0.88; transform: translateY(-1px); }
+        .flash-messages { margin-bottom: 1.5rem; }
+        .flash { padding: 0.8rem 1rem; border-radius: 10px; font-size: 0.9rem; margin-bottom: 0.5rem; }
+        .flash-success { background: #06d6a015; border: 1px solid #06d6a040; color: var(--teal); }
+        .flash-error { background: #f43f5e15; border: 1px solid #f43f5e40; color: var(--danger); }
+        .flash-info { background: #00b4d815; border: 1px solid #00b4d840; color: var(--peacock); }
+        .badge { display: inline-block; padding: 0.2rem 0.7rem; border-radius: 20px; font-size: 0.72rem; font-weight: 600; }
+        .badge-peacock { background: #00b4d820; color: var(--peacock); border: 1px solid #00b4d840; }
+        .badge-pink { background: #d63af920; color: var(--pink); border: 1px solid #d63af940; }
+        .badge-teal { background: #06d6a020; color: var(--teal); border: 1px solid #06d6a040; }
+        .badge-muted { background: var(--surface2); color: var(--muted); border: 1px solid var(--border); }
+        .divider { border: none; border-top: 1px solid var(--border); margin: 1.5rem 0; }
+        .text-muted { color: var(--muted); font-size: 0.875rem; }
+        .text-peacock { color: var(--peacock); } .text-pink { color: var(--pink); }
+        .text-center { text-align: center; }
+        .grid-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; }
+        .error-msg { color: var(--danger); font-size: 0.8rem; margin-top: 0.35rem; }
+        .pagination { display: flex; gap: 0.4rem; align-items: center; justify-content: center; margin-top: 2rem; }
+        .pagination a, .pagination span { padding: 0.4rem 0.85rem; border-radius: 8px; font-size: 0.85rem; text-decoration: none; border: 1px solid var(--border); color: var(--muted); transition: all 0.2s; }
+        .pagination a:hover { border-color: var(--peacock); color: var(--peacock); }
+        .pagination .current { background: var(--gradient); color: white; border-color: transparent; }
+        .empty-state { text-align: center; padding: 3rem 2rem; color: var(--muted); }
+        .empty-state .icon { font-size: 2.5rem; margin-bottom: 1rem; }
+        @media (max-width: 600px) { .grid-2 { grid-template-columns: 1fr; } nav { padding: 1rem; } .container { padding: 1.5rem 1rem; } }
+    </style>
+    {% block extra_styles %}{% endblock %}
+</head>
+<body>
+<nav>
+    <a href="{{ url_for('main.index') }}" class="nav-brand">FlaskQuiz ✦</a>
+    <div class="nav-links">
+        {% if current_user.is_authenticated %}
+            {% if current_user.role.name == 'Instructor' %}
+                <a href="{{ url_for('main.instructoraccount') }}">Dashboard</a>
+                <a href="{{ url_for('main.createtest') }}">New Test</a>
+                <a href="{{ url_for('main.mycreatedtests') }}">My Tests</a>
+            {% else %}
+                <a href="{{ url_for('main.learneraccount') }}">Dashboard</a>
+                <a href="{{ url_for('main.showtest') }}">Browse</a>
+                <a href="{{ url_for('main.attemtedtest') }}">My Attempts</a>
+            {% endif %}
+            <a href="{{ url_for('main.update_account') }}">Account</a>
+            <a href="{{ url_for('auth.logout') }}" class="pill">Logout</a>
+        {% else %}
+            <a href="{{ url_for('auth.login') }}">Login</a>
+            <a href="{{ url_for('auth.register') }}" class="pill">Register</a>
+        {% endif %}
+    </div>
+</nav>
+<div class="container">
+    {% with messages = get_flashed_messages(with_categories=true) %}
+        {% if messages %}
+            <div class="flash-messages">
+                {% for category, message in messages %}
+                    <div class="flash flash-{{ category }}">{{ message }}</div>
+                {% endfor %}
+            </div>
+        {% endif %}
+    {% endwith %}
+    {% block content %}{% endblock %}
+</div>
+</body>
+</html>

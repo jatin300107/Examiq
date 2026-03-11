@@ -1,0 +1,68 @@
+{% extends "base.html" %}
+{% block title %}My Attempts — FlaskQuiz{% endblock %}
+{% block content %}
+<div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 2rem;">
+    <h1 style="margin-bottom: 0;">My Attempts</h1>
+    <a href="{{ url_for('main.showtest') }}" class="btn btn-outline">Browse Tests</a>
+</div>
+
+{% if attempted_test.items %}
+    <div style="display: flex; flex-direction: column; gap: 0.75rem;">
+        {% for attempt in attempted_test.items %}
+        <div class="card" style="display: flex; justify-content: space-between; align-items: center;">
+            <div>
+                <h2 style="font-size: 1rem; margin-bottom: 0.3rem;">{{ attempt.test.title }}</h2>
+                <p class="text-muted" style="font-size: 0.85rem;">
+                    {{ attempt.test.topic }} ·
+                    {% if attempt.test.difficulty == 'easy' %}
+                        <span class="badge badge-teal">Easy</span>
+                    {% elif attempt.test.difficulty == 'medium' %}
+                        <span class="badge badge-peacock">Medium</span>
+                    {% else %}
+                        <span class="badge badge-pink">Hard</span>
+                    {% endif %}
+                </p>
+            </div>
+            <div style="text-align: right;">
+                {% if attempt.score is not none %}
+                    <p style="font-family: 'Syne', sans-serif; font-size: 1.4rem; font-weight: 700; background: var(--gradient); -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text;">
+                        {{ attempt.score }}/{{ attempt.test.questions|length * 4 }}
+                    </p>
+                    <p class="text-muted" style="font-size: 0.8rem;">
+                        {{ (attempt.score / (attempt.test.questions|length * 4)* 100)|round|int }}%
+                    </p>
+                {% else %}
+                    <span class="badge badge-muted">In progress</span>
+                {% endif %}
+            </div>
+        </div>
+        {% endfor %}
+    </div>
+
+    <div class="pagination">
+        {% if attempted_test.has_prev %}
+            <a href="{{ url_for('main.attemtedtest', page=attempted_test.prev_num) }}">← Prev</a>
+        {% endif %}
+        {% for page_num in attempted_test.iter_pages(left_edge=1, right_edge=1, left_current=2, right_current=2) %}
+            {% if page_num %}
+                {% if page_num == attempted_test.page %}
+                    <span class="current">{{ page_num }}</span>
+                {% else %}
+                    <a href="{{ url_for('main.attemtedtest', page=page_num) }}">{{ page_num }}</a>
+                {% endif %}
+            {% else %}
+                <span>…</span>
+            {% endif %}
+        {% endfor %}
+        {% if attempted_test.has_next %}
+            <a href="{{ url_for('main.attemtedtest', page=attemted_test.next_num) }}">Next →</a>
+        {% endif %}
+    </div>
+{% else %}
+    <div class="empty-state card">
+        <div class="icon">📝</div>
+        <p style="margin-bottom: 1rem;">No attempts yet.</p>
+        <a href="{{ url_for('main.showtest') }}" class="btn btn-primary">Take Your First Test</a>
+    </div>
+{% endif %}
+{% endblock %}

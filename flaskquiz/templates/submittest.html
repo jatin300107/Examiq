@@ -1,0 +1,58 @@
+{% extends "base.html" %}
+{% block title %}Results{% endblock %}
+
+{% block extra_styles %}
+<style>
+.score-circle {
+    width: 140px;
+    height: 140px;
+    border-radius: 50%;
+    border: 4px solid var(--accent);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    margin: 0 auto 1.5rem;
+}
+.score-number {
+    font-family: 'Space Mono', monospace;
+    font-size: 2.2rem;
+    color: var(--accent);
+    line-height: 1;
+}
+.score-label { font-size: 0.75rem; color: var(--muted); margin-top: 0.2rem; }
+</style>
+{% endblock %}
+
+{% block content %}
+<div style="max-width: 520px; margin: 2rem auto; text-align: center;">
+    <h1 style="margin-bottom: 0.5rem;">Test Complete</h1>
+    <p class="text-muted" style="margin-bottom: 2rem;">{{ attempt.test.title }}</p>
+
+    <div class="card" style="margin-bottom: 1rem;">
+        <div class="score-circle">
+            <span class="score-number">{{ score }}</span>
+            <span class="score-label">/ {{ attempt.test.questions|length * 4 }}</span>
+        </div>
+
+        {% set percent = (score / (attempt.test.questions|length * 4) * 100)|round|int %}
+        <p style="font-size: 1.1rem; margin-bottom: 0.5rem;">
+            {% if percent >= 80 %}
+                Excellent work! 🎉
+            {% elif percent >= 60 %}
+                Good effort! 👍
+            {% else %}
+                Keep practicing! 💪
+            {% endif %}
+        </p>
+        <p class="text-muted">You scored {{ percent }}%</p>
+
+        <hr class="divider">
+
+        <div style="display: flex; justify-content: center; gap: 1rem; flex-wrap: wrap;">
+            <a href="{{ url_for('main.showtests') }}" class="btn btn-primary">Try Another Test</a>
+            <a href="{{ url_for('main.attemptedtest') }}" class="btn btn-outline">My History</a>
+        </div>
+    </div>
+</div>
+{% endblock %}

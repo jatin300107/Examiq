@@ -1,0 +1,61 @@
+{% extends "base.html" %}
+{% block title %}Results — FlaskQuiz{% endblock %}
+{% block extra_styles %}
+<style>
+.score-ring {
+    width: 150px; height: 150px; border-radius: 50%;
+    background: conic-gradient(from 0deg, #00b4d8, #d63af9, #00b4d8);
+    display: flex; align-items: center; justify-content: center;
+    margin: 0 auto 1.5rem; position: relative;
+}
+.score-ring::before {
+    content: ''; position: absolute; width: 120px; height: 120px;
+    background: var(--surface); border-radius: 50%;
+}
+.score-inner {
+    position: relative; z-index: 1; text-align: center;
+}
+.score-number { font-family: 'Syne', sans-serif; font-size: 2rem; font-weight: 800; color: var(--text); line-height: 1; }
+.score-denom { font-size: 0.75rem; color: var(--muted); margin-top: 0.2rem; }
+</style>
+{% endblock %}
+{% block content %}
+<div style="max-width: 500px; margin: 2rem auto; text-align: center;">
+    <h1 style="margin-bottom: 0.4rem;">Test Complete</h1>
+    <p class="text-muted" style="margin-bottom: 2rem;">{{ attempt.test.title }}</p>
+
+    <div class="card">
+        <div class="score-ring">
+            <div class="score-inner">
+                <div class="score-number">{{ score }}</div>
+                <div class="score-denom">/ {{ attempt.test.questions|length * 4}}</div>
+            </div>
+        </div>
+
+        {% set percent = percentagee|round|int %}
+        <p style="font-size: 1.1rem; font-weight: 500; margin-bottom: 0.4rem;">
+            {% if percent >= 80 %}Excellent work! 🎉
+            {% elif percent >= 60 %}Good effort! 👍
+            {% else %}Keep practicing! 💪{% endif %}
+        </p>
+        <p class="text-muted" style="margin-bottom: 1.5rem;">You scored <strong style="color: var(--peacock);">{{ percent }}%</strong></p>
+
+        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 0.75rem; margin-bottom: 1.5rem;">
+            <div style="background: var(--surface2); border-radius: 10px; padding: 1rem;">
+                <p class="text-muted" style="font-size: 0.75rem; text-transform: uppercase; letter-spacing: 0.5px; margin-bottom: 0.3rem;">Topic</p>
+                <p style="font-weight: 500;">{{ attempt.test.topic }}</p>
+            </div>
+            <div style="background: var(--surface2); border-radius: 10px; padding: 1rem;">
+                <p class="text-muted" style="font-size: 0.75rem; text-transform: uppercase; letter-spacing: 0.5px; margin-bottom: 0.3rem;">Difficulty</p>
+                <p style="font-weight: 500; text-transform: capitalize;">{{ attempt.test.difficulty }}</p>
+            </div>
+        </div>
+
+        <hr class="divider">
+        <div style="display: flex; justify-content: center; gap: 0.75rem; flex-wrap: wrap;">
+            <a href="{{ url_for('main.showtest') }}" class="btn btn-primary">Try Another Test</a>
+            <a href="{{ url_for('main.attemtedtest') }}" class="btn btn-outline">My History</a>
+        </div>
+    </div>
+</div>
+{% endblock %}
