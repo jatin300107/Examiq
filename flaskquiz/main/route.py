@@ -103,10 +103,17 @@ def attempt(attempt_id):
     question = questions[page-1]
 
     if request.method == "POST":
+        answer = AttemptAnswer.query.filter_by(attemptt_id=attempt.id).first()
         option_id = request.form.get("option")
-        answer = AttemptAnswer(attemptt_id =attempt.id , question_id = question.id , selected_option_id = option_id)
-        db.session.add(answer)
-        db.session.commit()
+        if not answer:
+            
+            answer = AttemptAnswer(attemptt_id =attempt.id , question_id = question.id , selected_option_id = option_id)
+            db.session.add(answer)
+            db.session.commit()
+        else:
+            answer.selected_option_id = option_id
+            db.session.commit()
+
     
         if page >= total:
             return redirect(url_for("main.submittest" , attempt_id = attempt.id , page = page))

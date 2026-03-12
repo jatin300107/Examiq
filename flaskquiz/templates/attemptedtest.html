@@ -1,5 +1,5 @@
 {% extends "base.html" %}
-{% block title %}My Attempts — FlaskQuiz{% endblock %}
+{% block title %}My Attempts — Examiq{% endblock %}
 {% block content %}
 <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 2rem;">
     <h1 style="margin-bottom: 0;">My Attempts</h1>
@@ -55,7 +55,7 @@
             {% endif %}
         {% endfor %}
         {% if attempted_test.has_next %}
-            <a href="{{ url_for('main.attemtedtest', page=attemted_test.next_num) }}">Next →</a>
+            <a href="{{ url_for('main.attemtedtest', page=attempted_test.next_num) }}">Next →</a>
         {% endif %}
     </div>
 {% else %}

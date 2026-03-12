@@ -17,11 +17,11 @@
 <div style="max-width: 620px; margin: 0 auto;">
     <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 0.75rem;">
         <span class="text-muted" style="font-size: 0.85rem;">{{ attempt.test.title }}</span>
-        <span class="badge badge-muted">{{ page }} / {{ attempt.test.question|length }}</span>
+        <span class="badge badge-muted">{{ page }} / {{ attempt.test.questions|length }}</span>
     </div>
 
     <div class="progress-bar">
-        <div class="progress-fill" style="width: {{ (page / (attempt.test.question|length or  1) * 100)|round }}%"></div>
+        <div class="progress-fill" style="width: {{ (page / (attempt.test.questions|length or 1) * 100)|round }} %"></div>
     </div>
 
     <div class="card">
@@ -40,7 +40,7 @@
 
             <div style="margin-top: 1.5rem; display: flex; justify-content: flex-end;">
                 <button type="submit" class="btn btn-primary">
-                    {% if page >= attempt.test.question|length %}Submit Test{% else %}Next →{% endif %}
+                    {% if page == attempt.test.questions|length %}Submit Test{% else %}Next →{% endif %}
                 </button>
             </div>
         </form>
