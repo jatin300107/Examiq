@@ -21,6 +21,7 @@ Examiq is a role-based quiz and assessment platform built with Flask where instr
 - Flask
 - SQLite
 - HTML
+- CSS
 
 ## Purpose
 This project was built to explore backend system design, role-based access control, and dynamic test handling.
